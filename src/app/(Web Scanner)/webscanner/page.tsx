@@ -1,117 +1,71 @@
 "use client";
 
 import { useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 
-interface SecurityHeaderResult {
-    name: string;
-    description: string;
-    level: 'high' | 'medium' | 'low';
-    remediation: string;
-    present: boolean;
-}
-
-interface ScanResults {
-    sqlInjection: boolean;
-    xss: boolean;
-    directoryTraversal: boolean;
-    openRedirect: boolean;
-    securityHeaders: SecurityHeaderResult[];
-}
+import Image from 'next/image';
 
 export default function Home() {
-    const [url, setUrl] = useState<string>('');
-    const [mode, setMode] = useState<string>('balance');
-    const [results, setResults] = useState<ScanResults | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error , setError] = useState<string>("");
-    const [errorStatus,setErrorStatus] = useState<boolean>(false)
+    const [url, setUrl] = useState<string>('');
+    // const [mode, setMode] = useState<string>('High');    const mode = "high"
+    const router = useRouter()
 
-    const handleScan = async () => {
-        setLoading(true);
-        setResults(null);
-        setErrorStatus(false); // Reset error state before the request
-      
+    const handleScan = async (event: any) => {
         try {
-          const response = await axios.post('/api/webscanner', { url, mode });
-          setResults(response.data);
-        } catch (error: any) { // Catch specifically AxiosError for more details
-          setErrorStatus(true);
-      
-          // Handle different error scenarios based on status code or error message:
-          if (error.response?.status === 500) {
-            setError(
-              'Internal Server Error: An unexpected error occurred on the server. Please try again later.'
-            );
-          } else if (error.response?.data?.message) { // Check for message in response data
-            setError(error.response.data.message);
-          } else if (error.message.includes('Network Error')) { // Handle network errors
-            setError('Network Error: Failed to connect to the server. Please check your internet connection.');
-          } else {
-            setError('An error occurred while scanning the website. Please try again later.'); // Generic error message
-          }
-      
-          console.error('Error scanning website:', error); // Log the complete error for debugging
+            setLoading(true);
+            event.preventDefault();
+            // Prepare the data to send to the server
+            const queryParams = new URLSearchParams();
+            queryParams.append('url', url);
+            router.push(`/Result?${queryParams.toString()}`);
+        } catch (error) {
+            console.log("%c ", error, "color: red; font-size : 10px;")
         } finally {
-          setLoading(false);
+            setLoading(false)
         }
-      };
-      
-
+    }
     return (
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold text-blue-600 mb-6">Web Vulnerability Scanner</h1>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                    URL:
-                    <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                </label>
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                    Mode:
-                    <select value={mode} onChange={(e) => setMode(e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="high">High</option>
-                        <option value="balance">Balance</option>
-                        <option value="low">Low</option>
-                    </select>
-                </label>
-            </div>
-            <button onClick={handleScan} disabled={loading} className={`w-full px-4 py-2 bg-blue-600 text-white rounded-md font-medium focus:outline-none ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}>
-                {loading ? 'Scanning...' : 'Scan'}
-            </button>
-            {results && (
-                <div className="mt-6">
-                    <h2 className="text-2xl font-bold text-blue-600 mb-4">Scan Results</h2>
-                    <p className="text-gray-700 mb-2">SQL Injection: {results.sqlInjection ? 'Vulnerable' : 'Not Vulnerable'}</p>
-                    <p className="text-gray-700 mb-2">XSS: {results.xss ? 'Vulnerable' : 'Not Vulnerable'}</p>
-                    <p className="text-gray-700 mb-2">Directory Traversal: {results.directoryTraversal ? 'Vulnerable' : 'Not Vulnerable'}</p>
-                    <p className="text-gray-700 mb-2">Open Redirect: {results.openRedirect ? 'Vulnerable' : 'Not Vulnerable'}</p>
-                    {mode === 'high' && (
-                        <div className="mt-4">
-                            <h3 className="text-xl font-bold text-blue-600 mb-2">Security Headers</h3>
-                            <ul className="list-disc list-inside text-gray-700">
-                                {results.securityHeaders.length > 0 ? (
-                                    results.securityHeaders.map((header, index) => (
-                                        <li key={index}>
-                                            <p><strong>{header.name}</strong></p>
-                                            <p>Description: {header.description}</p>
-                                            <p>Level: {header.level}</p>
-                                            <p>Remediation: {header.remediation}</p>
-                                            <p>Status: {header.present ? 'Present' : 'Missing'}</p>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li>None</li>
-                                )}
-                            </ul>
-                        </div>
-                    )}
+        <div className=" flex p-10 flex-col  md:flex-row bg-gradient-to-tr from-blue-700 via-blue-500 to-blue-700  md:p-24">
+
+            <div className="flex flex-col items-start">
+                <h1 className=" mb-14 font-sans text-center text-white text-4xl font-bold" >Website Vulnerability Scanner</h1>
+                <div className='font-mono text-white w-30 font-bold' >
+                    Let VoltSec.io identify vulnerabilities in your website's code. Our scanner helps keep your website safe from cyberattacks.
                 </div>
-            )}
-            {errorStatus?  <div className="text-red-500">
-                {error}
-            </div> : null}
+                <div className='m-14'>
+
+                    <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} className=" w-[38vw] px-4 py-2 border border-gray-300  focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder='URL' />
+
+                    <button onClick={handleScan} disabled={loading} className={` w-[12vw] px-4 py-2 bg-green-500 text-white-500 text-bold font-[20px] ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}>
+                        {loading ? 'Scanning...' : 'Scan '}
+                    </button>
+
+                </div>
+
+            </div>
+            <div>
+                <Image
+                    src="https://www.voltsec-io.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F2.3ef1074c.png&w=1080&q=75"
+                    width={500}
+                    height={500}
+                    alt="Voltsec "
+                    className="animate-bounce "
+                />
+            </div>
+
         </div>
+
+        //     {/* <div className="mb-4">
+        //     <label className="block text-gray-700 font-medium mb-2">
+        //         Mode:
+        //         <select value={mode} onChange={(e) => setMode(e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        //             <option value="high">High</option>
+        //             <option value="balance">Balance</option>
+        //             <option value="low">Low</option>
+        //         </select>
+        //     </label>
+        // </div> */}
     );
 }
