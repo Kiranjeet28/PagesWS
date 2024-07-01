@@ -21,9 +21,9 @@ function Images({ src, classes, TextClasses, text, time ,loading}: Imagepage) {
     }
     }, [time,loading]);
     return (
-        <div className='invisible md:visible'>
+        <div className=''>
             {isHovered && (
-                <div className={`absolute  bg-white text-black rounded-md flex justify-center items-center p-2 ${TextClasses}`}>
+                <div className={` invisible md:visible absolute  bg-white text-black rounded-md flex justify-center items-center p-2 ${TextClasses}`}>
                     <span className="text-center  overflow-hidden text-ellipsis whitespace-nowrap">{text}</span>
                 </div>
 
@@ -36,8 +36,17 @@ function Images({ src, classes, TextClasses, text, time ,loading}: Imagepage) {
                 height={100}
               
                 alt="Voltsec WebImages"
-                className={`  absolute sm lg:h-65 lg:w-65 shadow-black/40 drop-shadow-2xl md:h-65 md:w-65  md:m-0 m-0 p-0 ${isHovered && loading &&  `animate-bounce`}  ${classes}`}
+                className={` invisible md:visible absolute sm lg:h-65 lg:w-65 shadow-black/40 drop-shadow-2xl md:h-65 md:w-65  md:m-0 m-0 p-0 ${isHovered && loading &&  `animate-bounce`}  ${classes}`}
             />
+             <Image
+
+src={src}
+width={300}
+height={100}
+
+alt="Voltsec WebImages"
+className={` md:invisible visible absolute lg:invisiable  shadow-black/40 drop-shadow-2xl h-[23vh] w-[23vh]   md:m-0 m-0 p-0 ${isHovered && loading &&  `animate-bounce`}  ${classes}`}
+/>
 
     
         </div>

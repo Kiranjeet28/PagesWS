@@ -66,9 +66,9 @@ export default function Home() {
 
                     <Images
                         src='https://www.voltsec-io.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F1.7f2dc77e.png&w=640&q=75'
-                        classes='right-0 md:right-0  md:top-10 top-10 '
+                        classes='right-0 md:right-0  md:top-10 top-5 '
                         text='Expert Security Support'
-                        TextClasses='md:right-[1vw] md:top-[9vh]'
+                        TextClasses='md:right-[1vw] top-5 right-0 md:top-[9vh]'
                         time={2000}
                         loading = {loading}
                     />
@@ -85,7 +85,7 @@ export default function Home() {
 
                     <Images
                         src='https://www.voltsec-io.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F16.5edaeb50.png&w=640&q=75'
-                        classes='md:left-10 left-2 md:top-10 top-10 '
+                        classes='md:left-10 -left-5 md:top-10 top-5 '
                         text='Voltsec.io Pentest'
                         TextClasses='left-10 top-[8vh]'
                         time={4000}
