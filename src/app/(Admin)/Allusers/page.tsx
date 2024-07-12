@@ -6,7 +6,7 @@ import User from "@/type/admin";
 import Loading from "@/components/loading";
 import ErrorPage from "@/components/error";
 
-const UserList: React.FC = () => {
+function UserList (){
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -33,7 +33,7 @@ const UserList: React.FC = () => {
 
   async function Deletebutton(UserEmail : any){
     try{
-      const response = await fetch(`/api/DeleteUser`, {
+      const response = await fetch("/api/DeleteUser", {
         method: "POST", 
         body: JSON.stringify({ email: UserEmail }), 
       });

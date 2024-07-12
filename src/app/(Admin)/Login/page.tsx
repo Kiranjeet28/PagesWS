@@ -16,14 +16,15 @@ const Login = () => {
 
     try {
       setlaoding(true)
-      const response = await fetch('/api/GetAdmin', {
+      const response = await fetch("/api/GetAdmin", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+        throw new Error(`Error: ${response.statusText});
+        }`);
       }
 
       const data = await response.json();
@@ -38,8 +39,10 @@ const Login = () => {
     } catch (error) {
       console.error('Error logging in:', error);
       setErrorMessage("An error occurred. Please try again.");
+      route.push("/")
     }finally{
       setlaoding(false)
+      
     }
   };
 
